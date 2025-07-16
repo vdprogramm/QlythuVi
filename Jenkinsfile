@@ -1,7 +1,9 @@
 pipeline {
     agent any
 
-
+    tools {
+        maven 'Maven 3.9.10' // đúng tên em đã cấu hình
+    }
     stages {
         stage('Checkout') {
             steps {
