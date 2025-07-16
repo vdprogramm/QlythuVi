@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form, #search-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+input, button {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.book-item {
+    background: #fff;
+    border-left: 4px solid #007bff;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.book-item .actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.book-item .actions button {
+    background-color: #6c757d;
+    margin-left: 5px;
+}
+
+.book-item .actions button:hover {
+    background-color: #5a6268;
+}
+
+.book-item .actions .delete {
+    background-color: #dc3545;
+}
+
+.book-item .actions .delete:hover {
+    background-color: #a71d2a;
+}
