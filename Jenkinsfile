@@ -1,9 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.9.10' // Đã cấu hình trong Jenkins
-    }
 
     stages {
         stage('Checkout') {
