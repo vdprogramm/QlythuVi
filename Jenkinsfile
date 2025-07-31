@@ -43,7 +43,7 @@ pipeline {
                     bat '''
                         docker stop book_app || echo "No container to stop"
                         docker rm book_app || echo "No container to remove"
-                        docker run -d -p 8080:8080 --name book_app %IMAGE_NAME%:%IMAGE_TAG%
+                        docker run -d -p 8082:8080 --name book_app %IMAGE_NAME%:%IMAGE_TAG%
                     '''
                 }
             }
