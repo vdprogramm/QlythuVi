@@ -29,12 +29,12 @@ pipeline {
 
                 // Copy .jar lên server
                 bat '''
-                    scp target/bookmanagement-0.0.1-SNAPSHOT.jar user@172.17.152.1:/home/user/app/
+                    scp target/bookmanagement-0.0.1-SNAPSHOT.jar user@192.168.2.13:/home/user/app/
                 '''
 
                 // SSH vào server và chạy ứng dụng
                 bat '''
-                    ssh user@172.17.152.1 '
+                    ssh user@192.168.2.13 '
                         pkill -f bookmanagement || true
                         nohup java -jar /home/user/app/bookmanagement-0.0.1-SNAPSHOT.jar > /home/user/app/app.log 2>&1 &
                     '
