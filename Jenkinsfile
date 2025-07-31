@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.10' // đúng tên em đã cấu hình
+        maven 'Maven 3.9.10' // đúng tên bạn đã cấu hình
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -23,21 +24,20 @@ pipeline {
             }
         }
 
-       stage('Deploy') {
+        stage('Deploy') {
             steps {
-                echo 'Deploying to server...'
+                echo 'Deploying locally on Windows...'
 
-                // Copy .jar lên server
-                bat '''
-                    scp target/bookmanagement-0.0.1-SNAPSHOT.jar user@192.168.2.13:/home/user/app/
-                '''
+                // Tạo thư mục nếu chưa có
+                bat 'if not exist C:\\home\\user\\app mkdir C:\\home\\user\\app'
 
-                // SSH vào server và chạy ứng dụng
+                // Copy file .jar sang thư mục đích
+                bat 'copy /Y target\\bookmanagement-0.0.1-SNAPSHOT.jar C:\\home\\user\\app\\'
+
+                // Chạy ứng dụng (nếu cần)
                 bat '''
-                    ssh user@192.168.2.13 '
-                        pkill -f bookmanagement || true
-                        nohup java -jar /home/user/app/bookmanagement-0.0.1-SNAPSHOT.jar > /home/user/app/app.log 2>&1 &
-                    '
+                    taskkill /F /IM java.exe || echo "No java process to kill"
+                    start "" java -jar C:\\home\\user\\app\\bookmanagement-0.0.1-SNAPSHOT.jar
                 '''
             }
         }
