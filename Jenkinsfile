@@ -2,7 +2,12 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.10' // đúng tên bạn đã cấu hình
+        maven 'Maven 3.9.10' // Tên Maven đã cài trong Jenkins
+    }
+
+    environment {
+        IMAGE_NAME = 'bookmanagement-app'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -24,21 +29,23 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Build') {
             steps {
-                echo 'Deploying locally on Windows...'
+                script {
+                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                }
+            }
+        }
 
-                // Tạo thư mục nếu chưa có
-                bat 'if not exist C:\\home\\user\\app mkdir C:\\home\\user\\app'
-
-                // Copy file .jar sang thư mục đích
-                bat 'copy /Y target\\bookmanagement-0.0.1-SNAPSHOT.jar C:\\home\\user\\app\\'
-
-                // Chạy ứng dụng (nếu cần)
-                bat '''
-                    taskkill /F /IM java.exe || echo "No java process to kill"
-                    start "" java -jar C:\\home\\user\\app\\bookmanagement-0.0.1-SNAPSHOT.jar
-                '''
+        stage('Docker Run') {
+            steps {
+                script {
+                    bat '''
+                        docker stop book_app || echo "No container to stop"
+                        docker rm book_app || echo "No container to remove"
+                        docker run -d -p 8080:8080 --name book_app %IMAGE_NAME%:%IMAGE_TAG%
+                    '''
+                }
             }
         }
     }
