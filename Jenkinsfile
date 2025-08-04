@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.10' // Tên Maven đã cài trong Jenkins
+        maven 'Maven 3.9.10' // Đúng tên đã cài trong Jenkins
     }
 
     environment {
@@ -19,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean install'
+                bat 'mvn clean install -DskipTests=false'
             }
         }
 
@@ -31,21 +31,29 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                script {
-                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
-                }
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+            }
+        }
+
+        stage('Clean Old Container') {
+            steps {
+                bat '''
+                    docker stop book_app || echo "No container to stop"
+                    docker rm book_app || echo "No container to remove"
+                '''
             }
         }
 
         stage('Docker Run') {
             steps {
-                script {
-                    bat '''
-                        docker stop book_app || echo "No container to stop"
-                        docker rm book_app || echo "No container to remove"
-                        docker run -d -p 8082:8080 --name book_app %IMAGE_NAME%:%IMAGE_TAG%
-                    '''
-                }
+                bat 'docker run -d -p 8082:8080 --name book_app %IMAGE_NAME%:%IMAGE_TAG%'
+            }
+        }
+
+        stage('Show Logs') {
+            steps {
+                echo 'Container started. Showing last 20 lines of logs:'
+                bat 'docker logs --tail 20 book_app'
             }
         }
     }
