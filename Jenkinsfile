@@ -10,6 +10,7 @@ pipeline {
         IMAGE_TAG = 'latest'
     }
 
+
     stages {
         stage('Checkout') {
             steps {
@@ -37,10 +38,19 @@ pipeline {
 
         stage('Clean Old Container') {
             steps {
-                bat '''
-                    docker stop book_app || echo "No container to stop"
-                    docker rm book_app || echo "No container to remove"
-                '''
+                script {
+                    try {
+                        bat 'docker stop book_app'
+                    } catch (e) {
+                        echo 'Container not running — skip stop.'
+                    }
+
+                    try {
+                        bat 'docker rm book_app'
+                    } catch (e) {
+                        echo 'No container to remove — skip remove.'
+                    }
+                }
             }
         }
 
